@@ -13,34 +13,11 @@ module.exports = {
 async function start() {
   const server = fastify({ logger: true })
 
-  await server.listen({
-    port: port
-  , host: '0.0.0.0'
-  })
-
   const client = await nats_client()
 
-
-  /*client.subscribe('service:name', (m) => {
-    return {
-      user_id: '123'
-    , name: 'John Doe'
-    }
-  })*/
-
-  const res = await client.request(
-    'service:name'
-  , {user_id: '123'}
-  )
-
-  // Declare a route
-  server.get('/hello', function handler (request, reply) {
-    reply.send({ hello: 'world' })
-  })
-
   server.get('/notif/message/:message_id', async function handler (request, reply) {
-    console.log('received request for %s', message_id)
     const {params: message_id} = request
+    console.log('received request for %s', message_id)
 
     const resp = await client.request('notif.get', {
       'message_id': message_id
@@ -48,6 +25,11 @@ async function start() {
 
     console.log(resp)
     reply.code(200).send(resp)
+  })
+
+  await server.listen({
+    port: port
+  , host: '0.0.0.0'
   })
 }
 

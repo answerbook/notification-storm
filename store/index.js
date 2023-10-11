@@ -13,7 +13,7 @@ async function start() {
   const client = await nats_client()
 
   client.subscribe('notif.get', (payload) => {
-    message_id = payload.message_id
+    const {message_id} = payload
 
     return {
       message_id: message_id
