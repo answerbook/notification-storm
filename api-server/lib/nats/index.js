@@ -2,7 +2,7 @@
 
 const {connect} = require('nats')
 
-const config = {servers: ['localhost:4222']}
+const config = {servers: ['nats:4222']}
 
 module.exports = async () => {
   try {

@@ -5,9 +5,11 @@ services:
     image: api:latest
     ports:
       - "3000:3000"
+    networks: ["nats"]
   store:
     build: store
     image: api:latest
+    networks: ["nats"]
   nats:
     image: nats
     ports:
