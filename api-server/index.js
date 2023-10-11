@@ -16,8 +16,8 @@ async function start() {
   const client = await nats_client()
 
   server.get('/notif/message/:message_id', async function handler (request, reply) {
-    const {params: message_id} = request
-    console.log('received request for %s', message_id)
+    const {message_id} = request.params
+    console.log('received GET request for %s', message_id)
 
     const resp = await client.request('notif.get', {
       'message_id': message_id
@@ -25,6 +25,17 @@ async function start() {
 
     console.log(resp)
     reply.code(200).send(resp)
+  })
+
+  server.post('/notif', async function handler (request, reply) {
+    const {message} = request.body
+    console.log('Received new notification request with body: %s', message)
+
+    const resp = await client.request('notif.publish', {
+      'message': message
+    })
+
+    reply.code(201).send(resp)
   })
 
   await server.listen({
