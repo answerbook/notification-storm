@@ -2,7 +2,7 @@
 
 const fastify = require('fastify')
 const {name} = require('./package.json')
-const client = require('../lib/client/index.js')
+const nats_client = require('../lib/client/index.js')
 
 const port = 3000
 
@@ -23,7 +23,21 @@ async function start() {
   , host: '0.0.0.0'
   })
 
-  const cl = await client()
+  const client = await nats_client()
+
+  client.subscribe('service:name', (m) => {
+    return {
+      user_id: '123'
+    , name: 'John Doe'
+    }
+  })
+
+  const res = await client.request(
+    'service:name'
+  , {user_id: '123'}
+  )
+
+  console.log(res)
 }
 
 // Properly teardown on INT and TERM signals.
