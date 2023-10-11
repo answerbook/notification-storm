@@ -20,6 +20,11 @@ networks:
         - subnet: 172.25.255.0/24
       driver: default
 services:
+  api:
+    build: api-server
+    image: api:latest
+    networks:
+      - main
   nats-1:
     command:
       - "--debug"
