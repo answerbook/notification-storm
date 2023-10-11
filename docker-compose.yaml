@@ -25,6 +25,8 @@ services:
     image: api:latest
     networks:
       - main
+    ports:
+      - "3000:3000"
   nats-1:
     command:
       - "--debug"
