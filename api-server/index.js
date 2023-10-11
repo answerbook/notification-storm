@@ -2,7 +2,7 @@
 
 const fastify = require('fastify')
 const {name} = require('./package.json')
-const nats_client = require('../lib/client/index.js')
+const nats_client = require('./lib/client/index.js')
 
 const port = 3000
 

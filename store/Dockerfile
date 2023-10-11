@@ -6,7 +6,6 @@ RUN addgroup -S mezmo && adduser -S mezmo -G mezmo
 USER mezmo
 WORKDIR /home/mezmo
 
-COPY lib ./lib
 COPY index.js ./index.js
 COPY package.json ./package.json
 COPY env ./env

@@ -1,5 +1,13 @@
 version: "3.5"
 services:
+  api:
+    build: api-server
+    image: api:latest
+    ports:
+      - "3000:3000"
+  store:
+    build: store
+    image: api:latest
   nats:
     image: nats
     ports:

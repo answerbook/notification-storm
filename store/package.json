@@ -1,10 +1,10 @@
 {
-  "name": "api-server",
-  "description": "API server for storm notification service",
+  "name": "store",
+  "description": "Notification store for storm notification service",
   "main": "index.js",
   "dependencies": {
-    "fastify": "^4.24.0",
-    "nats": "^2.17.0"
+    "fastify": "^4.24.0"
+  , "nats": "2.17.0"
   },
   "scripts": {
     "local": "env $(cat ./env/local.env)",
