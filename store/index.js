@@ -1,19 +1,51 @@
-// create a connection
-const nc = await connect({ servers: "demo.nats.io" });
+'use strict'
 
-// create a codec
-const sc = StringCodec();
+const {name} = require('./package.json')
+const nats_client = require('./lib/client/index.js')
 
-// this subscription listens for `time` requests and returns the current time
-const subscription = nc.subscribe("time");
-(async (sub) => {
-  console.log(`listening for ${sub.getSubject()} requests...`);
-  for await (const m of sub) {
-    if (m.respond(sc.encode(new Date().toISOString()))) {
-      console.info(`[time] handled #${sub.getProcessed()}`);
-    } else {
-      console.log(`[time] #${sub.getProcessed()} ignored - no reply subject`);
+const port = 3000
+
+module.exports = {
+  start
+}
+
+async function start() {
+  const client = await nats_client()
+
+  client.subscribe('notif.get', (payload) => {
+    message_id = payload.message_id
+
+    return {
+      message_id: message_id
+    , state: "QUEUED"
+    , time: new Date().toISOString()
     }
-  }
-  console.log(`subscription ${sub.getSubject()} drained.`);
-})(subscription);
+  })
+}
+
+// Properly teardown on INT and TERM signals.
+process.on('SIGTERM', onSignal)
+process.on('SIGINT', onSignal)
+
+function onSignal(signal) {
+  if (shutting_down) return
+  shutting_down = true
+  log.warn({signal}, 'received signal %s', signal)
+  stop()
+}
+
+/* istanbul ignore next */
+function onError(err) {
+  console.error(err)
+  process.nextTick(() => {
+    throw err
+  })
+}
+
+if (require.main === module) {
+  start()
+    .then(() => {
+      console.log(`successfully started ${name}`, )
+    })
+    .catch(onError)
+}

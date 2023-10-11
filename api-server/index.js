@@ -13,11 +13,6 @@ module.exports = {
 async function start() {
   const server = fastify({ logger: true })
 
-  // Declare a route
-  server.get('/hello', function handler (request, reply) {
-    reply.send({ hello: 'world' })
-  })
-
   await server.listen({
     port: port
   , host: '0.0.0.0'
@@ -25,19 +20,35 @@ async function start() {
 
   const client = await nats_client()
 
-  client.subscribe('service:name', (m) => {
+
+  /*client.subscribe('service:name', (m) => {
     return {
       user_id: '123'
     , name: 'John Doe'
     }
-  })
+  })*/
 
   const res = await client.request(
     'service:name'
   , {user_id: '123'}
   )
 
-  console.log(res)
+  // Declare a route
+  server.get('/hello', function handler (request, reply) {
+    reply.send({ hello: 'world' })
+  })
+
+  server.get('/notif/message/:message_id', async function handler (request, reply) {
+    console.log('received request for %s', message_id)
+    const {params: message_id} = request
+
+    const resp = await client.request('notif.get', {
+      'message_id': message_id
+    })
+
+    console.log(resp)
+    reply.code(200).send(resp)
+  })
 }
 
 // Properly teardown on INT and TERM signals.
