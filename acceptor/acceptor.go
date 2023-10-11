@@ -30,9 +30,9 @@ func publish(w http.ResponseWriter, req *http.Request) {
 
 	defer nc.Drain()
 
-	nc.Publish("notif.send.email", []byte("hello"))
-	nc.Publish("notif.send.slack", []byte("hello"))
-	nc.Publish("notif.send.sms", []byte("hello"))
+	nc.Publish("notif.send.email", []byte("hello email"))
+	nc.Publish("notif.send.slack", []byte("hello slack"))
+	nc.Publish("notif.send.sms", []byte("hello notif"))
 }
 
 func main() {
