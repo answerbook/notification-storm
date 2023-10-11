@@ -1,0 +1,12 @@
+{
+  "name": "api-server",
+  "description": "API server for storm notification service",
+  "main": "index.js",
+  "dependencies": {
+    "fastify": "^4.24.0"
+  },
+  "scripts": {
+    "local": "env $(cat ./env/local.env)",
+    "start": "npm run local node index.js"
+  }
+}
